@@ -1,7 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from "react";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as DataActions from "./actions";
 
-function App() {
+import logo from "./logo.svg";
+import "./App.css";
+
+const App = ({ getAllData }) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log("start");
+      try {
+        const response = await getAllData();
+        console.log(response, "response");
+      } catch (error) {
+        console.log(error, "error");
+      }
+      console.log("end");
+    };
+    fetchData();
+  }, [getAllData]);
   return (
     <div className="App">
       <header className="App-header">
@@ -20,6 +38,15 @@ function App() {
       </header>
     </div>
   );
-}
-
-export default App;
+};
+const { getAllData } = DataActions;
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators(
+    {
+      getAllData,
+    },
+    dispatch
+  );
+};
+const app = connect(undefined, mapDispatchToProps);
+export default app(App);
